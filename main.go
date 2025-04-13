@@ -4,13 +4,32 @@ import (
 	"log"
 	"os"
 
+	"github.com/dw/firebase-studio-api-server-test/task/handlers"
+	"github.com/dw/firebase-studio-api-server-test/task/repositories"
 	"github.com/gin-gonic/gin"
 )
+
+func setupRoutes(r *gin.Engine) {
+	// Initialize task repository and handler
+	taskRepo := repositories.NewInMemoryTaskRepository()
+	taskHandler := handlers.NewTaskHandler(taskRepo)
+
+	// Task routes
+	r.POST("/tasks", taskHandler.CreateTask)
+	r.GET("/tasks", taskHandler.GetAllTasks)
+	r.GET("/tasks/:id", taskHandler.GetTask)
+	r.PUT("/tasks/:id", taskHandler.UpdateTask)
+	r.DELETE("/tasks/:id", taskHandler.DeleteTask)
+
+	// Health check route
+	r.GET("/health", healthHandler)
+}
 
 func main() {
 	log.Print("starting server...")
 	r := gin.Default()
-	r.GET("/", handler)
+
+	setupRoutes(r)
 
 	// Determine port for HTTP service.
 	port := os.Getenv("PORT")
@@ -19,16 +38,11 @@ func main() {
 		log.Printf("Defaulting to port %s", port)
 	}
 
-	r.GET("/health", healthHandler)
 	// Start HTTP server.
 	log.Printf("Listening on port %s", port)
 	if err := r.Run(":" + port); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func handler(c *gin.Context) {
-	c.String(200, "Hello, World!")
 }
 
 func healthHandler(c *gin.Context) {
