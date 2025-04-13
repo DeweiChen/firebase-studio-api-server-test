@@ -4,15 +4,38 @@ import (
 	"log"
 	"os"
 
+	_ "github.com/dw/firebase-studio-api-server-test/docs"
 	"github.com/dw/firebase-studio-api-server-test/task/handlers"
 	"github.com/dw/firebase-studio-api-server-test/task/repositories"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
+
+// @title           Task Manager API
+// @version         1.0
+// @description     This is a task manager API server.
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   API Support
+// @contact.url    http://www.swagger.io/support
+// @contact.email  support@swagger.io
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      localhost:3000
+// @BasePath  /
+
+// @securityDefinitions.basic  BasicAuth
 
 func setupRoutes(r *gin.Engine) {
 	// Initialize task repository and handler
 	taskRepo := repositories.NewInMemoryTaskRepository()
 	taskHandler := handlers.NewTaskHandler(taskRepo)
+
+	// Swagger documentation
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Task routes
 	r.POST("/tasks", taskHandler.CreateTask)
