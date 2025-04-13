@@ -1,0 +1,23 @@
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# IDE
+.idea
+.vscode
+
+# Test files
+*.test
+*.out
+
+# Local development
+.env
+*.log
+
+# OS specific
+.DS_Store
+Thumbs.db 
