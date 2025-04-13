@@ -7,6 +7,7 @@ import (
 	_ "github.com/dw/firebase-studio-api-server-test/docs"
 	"github.com/dw/firebase-studio-api-server-test/task/handlers"
 	"github.com/dw/firebase-studio-api-server-test/task/repositories"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -51,6 +52,15 @@ func setupRoutes(r *gin.Engine) {
 func main() {
 	log.Print("starting server...")
 	r := gin.Default()
+
+	// Configure CORS
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: false,
+	}))
 
 	setupRoutes(r)
 
