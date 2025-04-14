@@ -35,6 +35,10 @@ func setupRoutes(r *gin.Engine) {
 	taskRepo := repositories.NewInMemoryTaskRepository()
 	taskHandler := handlers.NewTaskHandler(taskRepo)
 
+	// Serve static files
+	r.Static("/public", "./public")
+	r.StaticFile("/", "./public/index.html")
+
 	// Swagger documentation
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

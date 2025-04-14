@@ -23,6 +23,9 @@ WORKDIR /app
 # Copy the binary from builder
 COPY --from=builder /app/main .
 
+# Copy the public directory with static files
+COPY --from=builder /app/public ./public
+
 # Expose port 3000
 EXPOSE 3000
 
