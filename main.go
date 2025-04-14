@@ -31,8 +31,11 @@ import (
 // @securityDefinitions.basic  BasicAuth
 
 func setupRoutes(r *gin.Engine) {
-	// Initialize task repository and handler
-	taskRepo := repositories.NewInMemoryTaskRepository()
+	// Initialize Redis task repository and handler
+	taskRepo, err := repositories.NewRedisTaskRepository()
+	if err != nil {
+		log.Fatalf("Failed to initialize Redis task repository: %v", err)
+	}
 	taskHandler := handlers.NewTaskHandler(taskRepo)
 
 	// Serve static files
